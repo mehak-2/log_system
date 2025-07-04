@@ -17,8 +17,8 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3001',
     'http://localhost:3000',
-    'https://your-frontend-domain.vercel.app',
-    'https://your-frontend-domain.onrender.com'
+    'https://log-system-1.onrender.com',
+    'https://log-system-1.onrender.com'
   ];
   
   const origin = req.headers.origin;
