@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 const http = require('http');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const LOGS_FILE = path.join(__dirname, 'logs.json');
 
 const server = http.createServer(app);
