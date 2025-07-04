@@ -22,6 +22,9 @@ function App() {
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
   const WS_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:3000';
 
+  console.log('API_URL:', API_URL);
+  console.log('WS_URL:', WS_URL);
+
   const fetchLogs = async (filterParams = filters) => {
     setLoading(true);
     setError(null);
@@ -38,7 +41,14 @@ function App() {
       const queryString = queryParams.toString();
       const url = queryString ? `${API_URL}/logs?${queryString}` : `${API_URL}/logs`;
       
-      const response = await fetch(url);
+      console.log('Fetching from:', url);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -47,7 +57,8 @@ function App() {
       const data = await response.json();
       setLogs(data);
     } catch (err) {
-      setError(err.message);
+      console.error('Fetch error:', err);
+      setError(`Failed to fetch logs: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -55,6 +66,8 @@ function App() {
 
   useEffect(() => {
     fetchLogs();
+    
+    console.log('Attempting WebSocket connection to:', WS_URL);
     
     const ws = new WebSocket(WS_URL);
     
@@ -138,6 +151,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Logs Viewer</h1>
+        <div style={{ fontSize: '12px', opacity: 0.8 }}>
+          API: {API_URL} | WS: {WS_URL}
+        </div>
       </header>
       
       <FilterBar 
