@@ -19,12 +19,6 @@ function App() {
   const [wsConnected, setWsConnected] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
-  const WS_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:3000';
-
-  console.log('API_URL:', API_URL);
-  console.log('WS_URL:', WS_URL);
-
   const fetchLogs = async (filterParams = filters) => {
     setLoading(true);
     setError(null);
@@ -39,16 +33,9 @@ function App() {
       if (filterParams.timestampEnd) queryParams.append('timestamp_end', filterParams.timestampEnd);
       
       const queryString = queryParams.toString();
-      const url = queryString ? `${API_URL}/logs?${queryString}` : `${API_URL}/logs`;
+      const url = queryString ? `/logs?${queryString}` : '/logs';
       
-      console.log('Fetching from:', url);
-      
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,8 +44,7 @@ function App() {
       const data = await response.json();
       setLogs(data);
     } catch (err) {
-      console.error('Fetch error:', err);
-      setError(`Failed to fetch logs: ${err.message}`);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -67,9 +53,7 @@ function App() {
   useEffect(() => {
     fetchLogs();
     
-    console.log('Attempting WebSocket connection to:', WS_URL);
-    
-    const ws = new WebSocket(WS_URL);
+    const ws = new WebSocket('ws://localhost:3000');
     
     ws.onopen = () => {
       console.log('WebSocket connection established');
@@ -111,7 +95,7 @@ function App() {
     return () => {
       ws.close();
     };
-  }, [API_URL, WS_URL]);
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -147,16 +131,15 @@ function App() {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
+
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Logs Viewer</h1>
-        <div style={{ fontSize: '12px', opacity: 0.8 }}>
-          API: {API_URL} | WS: {WS_URL}
-        </div>
       </header>
       
-      <FilterBar 
+            <FilterBar 
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}
