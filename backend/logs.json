@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1751639315685,
+    "serverTimestamp": "2025-07-04T14:28:35.685Z",
+    "level": "error",
+    "message": "Database connection failed",
+    "resourceId": "server-1",
+    "timestamp": "2023-11-20T10:30:00Z",
+    "traceId": "abc123",
+    "spanId": "def456",
+    "commit": "a1b2c3d4",
+    "metadata": {
+      "userId": "user123"
+    }
+  },
+  {
+    "id": 1751639315699,
+    "serverTimestamp": "2025-07-04T14:28:35.699Z",
+    "level": "warn",
+    "message": "High memory usage detected",
+    "resourceId": "server-2",
+    "timestamp": "2023-11-20T10:31:00Z",
+    "traceId": "xyz789",
+    "spanId": "abc123",
+    "commit": "e5f6g7h8",
+    "metadata": {
+      "memoryUsage": "85%"
+    }
+  },
+  {
+    "id": 1751639315711,
+    "serverTimestamp": "2025-07-04T14:28:35.711Z",
+    "level": "info",
+    "message": "User login successful",
+    "resourceId": "auth-service",
+    "timestamp": "2023-11-20T10:32:00Z",
+    "traceId": "login123",
+    "spanId": "span456",
+    "commit": "i9j0k1l2",
+    "metadata": {
+      "username": "john_doe"
+    }
+  }
+]
