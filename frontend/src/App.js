@@ -19,6 +19,9 @@ function App() {
   const [wsConnected, setWsConnected] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+  const WS_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:3000';
+
   const fetchLogs = async (filterParams = filters) => {
     setLoading(true);
     setError(null);
@@ -33,7 +36,7 @@ function App() {
       if (filterParams.timestampEnd) queryParams.append('timestamp_end', filterParams.timestampEnd);
       
       const queryString = queryParams.toString();
-      const url = queryString ? `/logs?${queryString}` : '/logs';
+      const url = queryString ? `${API_URL}/logs?${queryString}` : `${API_URL}/logs`;
       
       const response = await fetch(url);
       
@@ -53,7 +56,7 @@ function App() {
   useEffect(() => {
     fetchLogs();
     
-    const ws = new WebSocket('ws://localhost:3000');
+    const ws = new WebSocket(WS_URL);
     
     ws.onopen = () => {
       console.log('WebSocket connection established');
@@ -95,7 +98,7 @@ function App() {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [API_URL, WS_URL]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -131,15 +134,13 @@ function App() {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
-
-
   return (
     <div className="App">
       <header className="App-header">
         <h1>Logs Viewer</h1>
       </header>
       
-            <FilterBar 
+      <FilterBar 
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}
